@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
-import Auth from './api/Auth';
+import { login, logout } from './api/Auth';
 import HttpClient from './api/HttpClient';
-import User from './api/User';
+import { getUser } from './api/User';
 
 jest.mock('./api/HttpClient');
 
@@ -17,12 +17,12 @@ describe('api calls', () => {
       },
     });
 
-    await Auth.login({ username: 'admin', password: 'password' });
+    await login({ username: 'admin', password: 'password' });
     expect(Cookies.get('Authorization')).toBe('testtoken');
   });
 
   it('logout correct', async () => {
-    Auth.logout();
+    logout();
     expect(Cookies.get('Authorization')).toBe(undefined);
   });
 
@@ -34,9 +34,9 @@ describe('api calls', () => {
       },
     });
 
-    const user = await User.get();
+    const user = await getUser();
 
-    expect(user.firstName).toBe('abc');
-    expect(user.lastName).toBe('dasda');
+    expect(user?.firstName).toBe('abc');
+    expect(user?.lastName).toBe('dasda');
   });
 });
