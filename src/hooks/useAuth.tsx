@@ -1,25 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Auth, { Credentials } from '../api/Auth';
+import { Credentials, login, logout, isLoggedIn } from '../api/Auth';
 
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const attemptLogin = (values: Credentials): Promise<boolean | void> => {
-    return Auth.login(values).then((success: boolean) => {
+  const handleLogin = async (values: Credentials) => {
+    try {
+      await login(values);
       setIsAuthenticated(true);
-    })
+    } catch (error) {
+      setIsAuthenticated(false);
+      throw error;
+    }
   };
 
-  const attemptLogout = () => {
-    Auth.logout();
+  const handleLogout = () => {
+    logout();
     setIsAuthenticated(false);
   };
 
   //Initial auth state, if cookie exists => true
   useEffect(() => {
-    setIsAuthenticated(Auth.isAuthenticated());
+    setIsAuthenticated(isLoggedIn());
   }, []);
 
   useEffect(() => {
@@ -30,7 +34,7 @@ const useAuth = () => {
     }
   }, [isAuthenticated]);
 
-  return { isAuthenticated, attemptLogin, attemptLogout };
+  return { isAuthenticated, handleLogin, handleLogout };
 };
 
 export default useAuth;

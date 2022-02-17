@@ -6,26 +6,19 @@ export interface IUser {
   lastName: string;
 }
 
-const User = Object.freeze({
-  /**
-   * Fetch user from API
-   * @returns IUser
-   */
-  get: (): Promise<IUser> => {
-    return new Promise((resolve, reject) => {
-      HttpClient.request({
-        url: '/user',
-        method: 'GET',
-      })
-        .then((response) => response.data)
-        .then((user) => {
-          resolve(user);
-        })
-        .catch((error) => {
-          reject(error);
-        });
+/**
+ * Fetch user from API
+ * @returns IUser
+ */
+export const getUser = async (): Promise<IUser | null> => {
+  try {
+    const response = await HttpClient.request({
+      url: '/user',
+      method: 'GET',
     });
-  },
-});
 
-export default User;
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};

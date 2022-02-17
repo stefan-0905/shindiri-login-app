@@ -2,8 +2,8 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
 import Navigation from './Navigation';
-import Auth from '../../api/Auth';
 import Cookies from 'js-cookie';
+import { logout } from '../../api/Auth';
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -12,10 +12,10 @@ beforeEach(() => {
 describe('navigation', () => {
   it('logout works', () => {
     Cookies.set('Authorization', 'test')
-    const attemptLogout = jest.fn(() => {
-      Auth.logout()
+    const handleLogout = jest.fn(() => {
+      logout()
     });
-    const { getByTestId } = render(<Navigation attemptLogout={attemptLogout} />);
+    const { getByTestId } = render(<Navigation handleLogout={handleLogout} />);
 
     const button = getByTestId('button-logout');
 

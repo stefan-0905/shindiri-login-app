@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
-import Auth, { Credentials } from '../../api/Auth';
+import { Credentials, login } from '../../api/Auth';
 import Cookies from 'js-cookie';
 import LoginForm from './LoginForm';
 import HttpClient from '../../api/HttpClient';
@@ -19,8 +19,8 @@ describe('login form', () => {
         token: 'testtoken',
       },
     });
-    const attemptLogin = jest.fn((credentials: Credentials) => Auth.login(credentials));
-    const { getByTestId } = render(<LoginForm attemptLogin={attemptLogin} />);
+    const handleLogin = jest.fn((credentials: Credentials) => login(credentials));
+    const { getByTestId } = render(<LoginForm handleLogin={handleLogin} />);
     const button = getByTestId('button-submit');
 
     fireEvent.change(getByTestId('username-input'), { target: { value: 'admin' } });
